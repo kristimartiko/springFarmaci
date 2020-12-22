@@ -25,10 +25,10 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private MyUserDetailService myUserDetailService;
 
     @Autowired
-    private MyUserDetailService myUserDetailService;
+    private JwtUtil jwtTokenUtil;
 
     @GetMapping("/users")
         public List<User> getAllUsers() {
@@ -36,17 +36,22 @@ public class UserController {
         }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthentiactionRequest authentiactionRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthentiactionRequest authenticationRequest) throws Exception {
+
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authentiactionRequest.getUsername(), authentiactionRequest.getPassword()));
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password");
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+            );
         }
-        final UserDetails userDetails = myUserDetailService.loadUserByUsername(authentiactionRequest.getUsername());
+        catch (BadCredentialsException e) {
+            throw new Exception("Incorrect username or password", e);
+        }
 
-        final String firstName = myUserDetailService.getCurrentUsername(authentiactionRequest.getUsername());
 
-        final String jwt = jwtUtil.generateToken(userDetails);
+        final UserDetails userDetails = myUserDetailService
+                .loadUserByUsername(authenticationRequest.getUsername());
+
+        final String jwt = jwtTokenUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
