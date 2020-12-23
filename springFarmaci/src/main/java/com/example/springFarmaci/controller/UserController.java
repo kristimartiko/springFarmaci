@@ -1,5 +1,6 @@
 package com.example.springFarmaci.controller;
 
+import com.example.springFarmaci.dto.UserDTO;
 import com.example.springFarmaci.models.AuthentiactionRequest;
 import com.example.springFarmaci.models.AuthenticationResponse;
 import com.example.springFarmaci.models.User;
@@ -31,9 +32,30 @@ public class UserController {
     private JwtUtil jwtTokenUtil;
 
     @GetMapping("/users")
-        public List<User> getAllUsers() {
+    public List<User> getAllUsers() {
             return userService.findAll();
         }
+
+    @PostMapping("users/signup")
+    public User addUser(@RequestBody UserDTO userDTO) {
+        return userService.signUp(userDTO);
+    }
+
+    @PostMapping("/users/add")
+    public User addUserFormAdmin(@RequestBody UserDTO userDTO) {
+        return userService.addUser(userDTO);
+    }
+
+    @PutMapping("/users/update/{id}")
+    public void update(@RequestBody UserDTO userDTO,
+                       @PathVariable Long id) {
+        userService.updateUser(userDTO, id);
+    }
+
+    @DeleteMapping("users/delete/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthentiactionRequest authenticationRequest) throws Exception {
