@@ -19,41 +19,52 @@ public class ProductController {
         return "Hello Boss";
     }
 
+    //Kthen te gjitha produktet
     @GetMapping("/products")
     public List<Product> getAllProducts() {
         return productService.findAll();
     }
 
+    //Shton produkt te ri
+    @PostMapping("/products/add")
+    public Product addProduct(@RequestBody ProductDTO productDTO) {
+        return productService.addProduct(productDTO);
+    }
+
+    //Update nje produkt
+    @RequestMapping(value = "/products/update{id}", method = RequestMethod.PUT)
+    public void updateProduct(@RequestBody ProductDTO productDTO,
+                              @PathVariable("id") Long id) {
+        productService.updateProduct(productDTO, id);
+    }
+
+    //Fshin nje produkt
+    @RequestMapping(value = "/products/delete{id}", method = RequestMethod.DELETE)
+    public void deleteProduct(@PathVariable("id") Long id) {
+        productService.deleteProduct(id);
+    }
+
+    //Fshin nje produkt nga karta
     @RequestMapping(value = "/cart/delete{id}", method = RequestMethod.DELETE)
     public void deleteCartItem(@PathVariable Long id) {
         productService.deleteCartItem(id);
     }
 
+    //Shton sasin ne karte
     @GetMapping(value = "/cart/increment{id}")
     public void incrementQuantity(@PathVariable Long id) {
         productService.incrementQuantity(id);
     }
 
+    //Zbret sasin ne karte
     @GetMapping(value = "/cart/decremet{id}")
     public void decrementQuantity(@PathVariable Long id) {
         productService.decrementQuantity(id);
     }
 
-    @RequestMapping(value = "/products/delete{id}", method = RequestMethod.DELETE)
-    public void deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
-    }
-
-    @RequestMapping(value = "/products/update{id}", method = RequestMethod.PUT)
-    public void updateProduct(@RequestBody ProductDTO productDTO,
-            @PathVariable Long id) {
-        productService.updateProduct(productDTO, id);
-    }
-
+    //Shton nje produkt ne karte
     @PostMapping(value = "/cart/add")
     public Cart_Items addToCart(@RequestBody Long id) {
         return productService.addToCart(id);
     }
-
-
 }
