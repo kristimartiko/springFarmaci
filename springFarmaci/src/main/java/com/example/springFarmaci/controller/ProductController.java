@@ -63,8 +63,8 @@ public class ProductController {
     }
 
     //Shton nje produkt ne karte
-    @PostMapping(value = "/cart/add")
-    public Cart_Items addToCart(@RequestBody Long id) {
+    @PostMapping(value = "/cart/add{id}")
+    public Cart_Items addToCart(@PathVariable Long id) {
         return productService.addToCart(id);
     }
 }
