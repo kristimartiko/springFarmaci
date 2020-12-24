@@ -4,6 +4,7 @@ import com.example.springFarmaci.dto.ProductDTO;
 import com.example.springFarmaci.dto.mappers.DTOMappers;
 import com.example.springFarmaci.models.Cart_Items;
 import com.example.springFarmaci.models.Product;
+import com.example.springFarmaci.models.User;
 import com.example.springFarmaci.repository.CartItemsRepository;
 import com.example.springFarmaci.repository.ProductRepository;
 import com.example.springFarmaci.repository.UserRepository;
@@ -36,8 +37,23 @@ public class ProductService {
     }
 
     public Cart_Items addToCart(Long productId) {
-        Cart_Items existingCartItem = cartItemsRepository.isPresent(productId);
-        return cartItemsRepository.save(existingCartItem);
+        Cart_Items existingCartItem = cartItemsRepository.isPresent(myUserDetailService.getCurrentUser().getId(), productId);
+        if(existingCartItem != null) {
+            if(existingCartItem.getQuantity() < 5) {
+                incrementQuantity(existingCartItem.getId());
+                return existingCartItem;
+            } else {
+                return null;
+            }
+        } else {
+            User user = myUserDetailService.getCurrentUser();
+            Cart_Items cart_item = new Cart_Items();
+            cart_item.setUser(user);
+            Product product = productRepository.getOne(productId);
+            cart_item.setProduct(product);
+            cart_item.setQuantity(1);
+            return cartItemsRepository.save(cart_item);
+        }
     }
 
     public void deleteProduct(Long id) {
