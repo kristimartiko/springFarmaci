@@ -31,32 +31,38 @@ public class UserController {
     @Autowired
     private JwtUtil jwtTokenUtil;
 
+    //Kthen te gjith users
     @GetMapping("/users")
     public List<User> getAllUsers() {
             return userService.findAll();
         }
 
+    //Sign Up
     @PostMapping("users/signup")
     public User addUser(@RequestBody UserDTO userDTO) {
         return userService.signUp(userDTO);
     }
 
+    //Shton user
     @PostMapping("/users/add")
     public User addUserFormAdmin(@RequestBody UserDTO userDTO) {
         return userService.addUser(userDTO);
     }
 
+    //Update user
     @PutMapping("/users/update/{id}")
     public void update(@RequestBody UserDTO userDTO,
                        @PathVariable Long id) {
         userService.updateUser(userDTO, id);
     }
 
+    //Delete User
     @DeleteMapping("users/delete/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 
+    //Log in
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthentiactionRequest authenticationRequest) throws Exception {
 
@@ -78,6 +84,7 @@ public class UserController {
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
+    //Kthen nje User
     @GetMapping("/user{email}")
     public User getUser(@PathVariable String email) {
         return userService.findOne(email);
