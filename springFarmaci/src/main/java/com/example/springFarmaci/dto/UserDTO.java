@@ -1,20 +1,13 @@
 package com.example.springFarmaci.dto;
 
-public class UserDTO {
+import java.io.Serializable;
+
+public class UserDTO implements Serializable {
     public String firstName;
     public String lastName;
     public String email;
     public String password;
     public String role;
-
-    public UserDTO(String firstName, String lastName, String email,
-                   String password, String role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

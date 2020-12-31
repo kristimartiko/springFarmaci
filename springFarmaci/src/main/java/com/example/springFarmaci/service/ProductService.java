@@ -1,5 +1,6 @@
 package com.example.springFarmaci.service;
 
+import com.example.springFarmaci.dto.CartItemDTO;
 import com.example.springFarmaci.dto.ProductDTO;
 import com.example.springFarmaci.dto.mappers.DTOMappers;
 import com.example.springFarmaci.models.Cart_Items;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -98,5 +100,10 @@ public class ProductService {
         Integer newQuantity = cart_items.getQuantity() - 1;
         cart_items.setQuantity(newQuantity);
         cartItemsRepository.save(cart_items);
+    }
+
+    public List<CartItemDTO> getCurrentUserItems() {
+        return cartItemsRepository.findByUserId(myUserDetailService.getCurrentUser().getId()).stream().filter(ci ->
+                ci.getProduct().getToDate() == null).map(ci -> dtoMappers.cartItemToMapper(ci)).collect(Collectors.toList());
     }
 }

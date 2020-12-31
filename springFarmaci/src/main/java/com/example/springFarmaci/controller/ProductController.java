@@ -1,5 +1,6 @@
 package com.example.springFarmaci.controller;
 
+import com.example.springFarmaci.dto.CartItemDTO;
 import com.example.springFarmaci.dto.ProductDTO;
 import com.example.springFarmaci.models.Cart_Items;
 import com.example.springFarmaci.models.Product;
@@ -64,7 +65,12 @@ public class ProductController {
 
     //Shton nje produkt ne karte
     @PostMapping(value = "/cart/add{id}")
-    public Cart_Items addToCart(@PathVariable Long id) {
+    public Cart_Items addToCart(@RequestBody Long id) {
         return productService.addToCart(id);
+    }
+
+    @GetMapping("users/cart")
+    public List<CartItemDTO> getCartItems() {
+        return productService.getCurrentUserItems();
     }
 }

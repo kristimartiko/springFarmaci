@@ -39,6 +39,10 @@ public class Product {
         this.toDate = toDate;
     }
 
+    public Date getToDate() {
+        return toDate;
+    }
+
     public Long getId() {
         return id;
     }

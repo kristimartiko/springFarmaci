@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class UserController {
     @Autowired
     private UserService userService;
@@ -75,13 +76,14 @@ public class UserController {
             throw new Exception("Incorrect username or password", e);
         }
 
+        final String firstName = myUserDetailService.getCurrentUserName(authenticationRequest.getUsername());
 
         final UserDetails userDetails = myUserDetailService
                 .loadUserByUsername(authenticationRequest.getUsername());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt, firstName));
     }
 
     //Kthen nje User
